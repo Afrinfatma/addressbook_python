@@ -49,18 +49,18 @@ def storing_personlist():
             break
     return contacts_list
 
-def edit_person_details():
+def edit_delete_person_details(contacts_list):
     """
            Description: Editing Contact Details form Console i.e. by user choice
            Parameters: None
            Returns: Returns a list containing objects of Contact Class that is taken form Console i.e. User
        """
-    edit_contact_by_name=input("Enter the name of person whose contact details you want to edit ").upper()
+    edit_delete_contact_by_name=input("Enter the name of person whose contact details you want to edit or delete ").upper()
     try:
         for item in contacts_list:
-            if item.firstname.upper()==edit_contact_by_name:
+            if item.firstname.upper()==edit_delete_contact_by_name:
                 choice=input(
-                    "Enter choice you want to edit:\n 1:firstname,2:lastname,3:Address,4:City,5:State,6:zip,7:phone,8:email")
+                    "Enter choice either you want to edit or delete:\n 1:firstname,2:lastname,3:Address,4:City,5:State,6:zip,7:phone,8:email,9:Delete ")
                 if (choice == "1"):
                     fn = input("Enter updated first name: ")
                     item.first_name = fn
@@ -85,20 +85,27 @@ def edit_person_details():
                 elif (choice == "8"):
                     email = input("Enter updated email: ")
                     item.email = email
+                elif (choice == "9"):
+                    contacts_list.remove(item)
+                    return contacts_list
                 else:
                     print("Invalid Choice")
+            else:
+                print("The name u entered does not exist")
 
+    except Exception as e:
+        print(e)
 
-    except Exception as ex:
-        print(ex)
 
 
 if __name__ == '__main__':
     contacts_list = []
     storing_personlist()
-    user_choice=input("Do you want to edit the contact details\"Y\" or \"N\":").upper()
+    user_choice=input("Do you want to edit or delete the contact details\"Y\" or \"N\":").upper()
     if user_choice.upper()=='Y':
-        edit_person_details()
+        edit_delete_person_details(contacts_list)
+
+
 
     for item in contacts_list:
         print(str(item))
