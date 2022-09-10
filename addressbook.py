@@ -1,4 +1,5 @@
 import json
+import csv
 import logging
 
 from loghandler import logger
@@ -42,6 +43,19 @@ class Contact:
                    f'Phone Number: {self.phone_number}, Email: {self.email} '
         except Exception as e:
             print(e)
+    def to_csv(self):
+        try:
+            return f'Full Name: {self.full_name}, Address: {self.address},City :{self.city}, State:{self.state}, Zip:{self.zip} ' \
+                   f'Phone Number: {self.phone_number}, Email: {self.email} '
+        except Exception as e:
+            print(e)
+
+
+    def as_dict(self):
+
+        return {"full_name": self.full_name,"address": self.address,"city" :self.city, "state":self.state, "zip":self.zip,
+               'phone_number': self.phone_number, "email":self.email}
+
 class Addressbook:
     def __init__(self, name):
         self.name = name
@@ -92,6 +106,33 @@ class Addressbook:
                 return json_result_dict
         except Exception as e:
             print(e)
+    def add_csv_contact(self):
+        try:
+            csv_result_dict={}
+            for key,value in self.contact_dict.items():
+                csv_result_dict.update({key:value.to_csv()})
+            return csv_result_dict
+        except Exception as e:
+            print(e)
+
+
+
+    # def write_csv_function(cls,  addressbook_dict: dict[str, Addressbook]):
+    #
+    #     list_ = []
+    #     for address_book_name, addressbook_obj in addressbook_dict.items():
+    #         for contact_object in addressbook_obj.contact.values():
+    #             contact_dict = contact_obj.as_dict()
+    #             contact_dict.update({'Addressbook-name': address_book_name})
+    #             list_.append(contact_dict)
+    #
+    #     payload = list_  # type: ignore
+    #     with open(cls.CSV_FILE, 'w', newline='') as f:
+    #         fieldnames = ["first_name","last_name","Address","city","state","zip","phone_number","email"]
+    #         writer = csv.DictWriter(f, fieldnames=fieldnames)
+    #         writer.writeheader()
+    #         for item in payload:
+    #             writer.writerow(item)
 
 if __name__ == '__main__':
 
@@ -160,7 +201,7 @@ if __name__ == '__main__':
             addressbook_object = addressbook_dict.get(addressbook_name)
             if addressbook_object is None:
                 print("Address book does not exist")
-                return
+            return
             first_name = input("Enter the contact person name:\n")
             contact_obj = addressbook_object.get_contact(first_name)
             if contact_obj is None:
@@ -176,10 +217,10 @@ if __name__ == '__main__':
             email = input("Enter the email:\n")
             # address_book_object.update_contact(sl_no, first_name, last_name, address, phone_number, email)
             contact = Contact(fname=first_name,lname=last_name,address=address, city=city, state=state, zip=zip,phone_number=phone_number,
-                                  email=email)
+              email=email)
             addressbook_object.add_contact(contact)
         except Exception as e:
-            print(e)
+                print(e)
 
 
     def get_contact_address_book():
@@ -205,7 +246,7 @@ if __name__ == '__main__':
 
     def delete_contact_address_book():
         """
-         Helper function to delete the contacts
+        Helper function to delete the contacts
         :return: None
         """
         try:
@@ -215,8 +256,7 @@ if __name__ == '__main__':
                 print("Address book doesn't exist")
                 return
             first_name = input("Enter the first name:\n")
-            print(
-            addressbook_obj.delete_contact(first_name))
+            print(addressbook_obj.delete_contact(first_name))
         except Exception as e:
             print(e)
 
@@ -241,8 +281,8 @@ if __name__ == '__main__':
             json_dict={}
             for name ,obj in addressbook_dict.items():
                 json_dict.update({name:obj.add_json_contact()})
-            with open ("json_addressbook.json","w")as file:
-                json.dump(json_dict,file,indent=4)
+                with open ("json_addressbook.json","w")as file:
+                    json.dump(json_dict,file,indent=4)
         except exception as e:
             print(e)
     def read_json_function():
@@ -252,18 +292,66 @@ if __name__ == '__main__':
                 print(data)
         except Exception as e:
             print (e)
-        def execute_contact():
-            print("Invalid! Enter the correct choice")
+
+    def write_csv_function():
+        try:
+            print("welcome to csv")
+            payload = []
+            for address_book_name, addressbook_obj in addressbook_dict.items():
+                for contact_object in addressbook_obj.contact_dict.values():
+                    contact_dict = contact_object.as_dict()
+                    contact_dict.update({'Addressbook-name': address_book_name})
+                    payload.append(contact_dict)
+
+            with open("csv_addressbook.csv", "w", newline="") as csv_file:
+                field_names = ['Addressbook-name', "full_name", "address", "city", "state", "zip", "phone_number",
+                               "email"]
+
+                writer = csv.DictWriter(csv_file, fieldnames=field_names)
+                writer.writeheader()
+                for item in payload:
+                    writer.writerow(item)
+        except Exception as e:
+            print(e)
+
+
+    def read_csv_function():
+        try:
+            with open("csv_addressbook.csv","r") as csv_file:
+                data=csv.reader(csv_file)
+                for i in data:
+                    print(i)
+        except Exception as e:
+            print (e)
+    # def write_csv_function(cls,  addressbook_dict: dict[str, Addressbook]):
+    #
+    #     list_ = []
+    #     for addressbook_name, addressbook_obj in addressbook_dict.items():
+    #     for contact_object in addressbook_obj.contact.values():
+    #     contact_dict = contact_obj.as_dict()
+    #     contact_dict.update({'Addressbook-name': addressbook_name})
+    #     list_.append(contact_dict)
+    #
+    #     payload = list_  # type: ignore
+    #     with open(cls.CSV_FILE, 'w', newline='') as f:
+    #     fieldnames = ["first_name","last_name","Address","city","state","zip","phone_number","email"]
+    #     writer = csv.DictWriter(f, fieldnames=fieldnames)
+    #     writer.writeheader()
+    #     for item in payload:
+    #     writer.writerow(item)
+    def execute_contact():
+        print("Invalid! Enter the correct choice")
 
     choice_dict = {1: add_addressbook, 2: display_addressbook, 3: add_contact_address_book,
                    4: get_contact_address_book,5:edit_contact_address_book,
                    6: delete_contact_address_book,7: display_contact_address_book,
-                   8:write_json_function,9:read_json_function}
+                   8:write_json_function,9:read_json_function,
+                   10:write_csv_function,11:read_csv_function}
 
     while True:
             print(
                 "Enter the choice: \n1.Add addressbook\n2.Display addressbook\n3.Add contacts\n4.Get contacts\n5.Edit "
-                "contacts\n6.Delete contacts\n7.Display contacts\n 8.Json write\n 9.Read json\n0.Exit")
+                "contacts\n6.Delete contacts\n7.Display contacts\n 8.Json write\n 9.Read json\n 10. CSV write\n 11.CSV read\n0.Exit")
             choice = int(input())
             if choice in choice_dict.keys():
                 choice_dict.get(choice)()
