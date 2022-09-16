@@ -351,12 +351,12 @@ if __name__ == '__main__':
     while True:
             print(
                 "Enter the choice: \n1.Add addressbook\n2.Display addressbook\n3.Add contacts\n4.Get contacts\n5.Edit "
-                "contacts\n6.Delete contacts\n7.Display contacts\n 8.Json write\n 9.Read json\n 10. CSV write\n 11.CSV read\n0.Exit")
+                "contacts\n6.Delete contacts\n7.Display contacts\n 8.Json write\n 9.Read json\n 10. CSV write\n 11.CSV read\n0.Exit\n")
             choice = int(input())
             if choice in choice_dict.keys():
                 choice_dict.get(choice)()
             else:
                 execute_contact()
 
-print("this is address book ")
+
 
